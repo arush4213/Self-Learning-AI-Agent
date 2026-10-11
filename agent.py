@@ -66,7 +66,21 @@ def run_agent(question):
         memory.append(f"Q: {question} -> {remember}")
     return answer
 
-run_agent("What is neuromorphic computing?")
-run_agent("How does it relate to artificial intellignece?")
-run_agent("What did we just discuss?")
-    
+print("\n Self-Learning AI Agent")
+print("Type 'quit' to exit | Type 'memory' to see what I remember\n")
+
+while True:
+    question = input("You: ").strip()
+    if question.lower() == "quit":
+        print("Goodbye!")
+        break
+    elif question.lower() == "memory":
+        if memory:
+            print("\n Current Memory:")
+            for i, m in enumerate(memory,1):
+                print(f"{i}. {m}")
+                print()
+        else:
+            print("No memory yet.\n")
+    elif question:
+        run_agent(question)
