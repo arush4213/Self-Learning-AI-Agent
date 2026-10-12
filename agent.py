@@ -1,18 +1,27 @@
 import os
+import json
 from dotenv import load_dotenv
 from google import genai
+
 load_dotenv()
 client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
-memory = []
+MEMORY_FILE = "memory.json"
+def load_memory():
+    if os.path.exists(MEMORY_FILE):
+        with open(MEMORY_FILE, "r") as f:
+            return json.load(f)
+    return []
+def save_memory(memory):
+    with open(MEMORY_FILE, "w") as f:
+        json.dump(memory, f, indent=2)
+
+memory = load_memory()
 def think(question, memory):
     memory_context = "\n".join(memory) if memory else "No previous memory."
     prompt = f"""You are a self-learning AI agent.
-
 Your memory from previous interactions:
 {memory_context}
-
 Current question: {question}
-
 Think step by step:
 1. What do I already know about this from memory?
 2. What is the answer to this question?
@@ -27,7 +36,6 @@ REMEMBER: what to store in memory
         model="gemini-3.5-flash-lite",
         contents=prompt
     )
-    
     return response.text
 def parse_response(response):
     thought, answer, remember = "", "", ""
@@ -64,11 +72,10 @@ def run_agent(question):
     print(f"REMEMBER: {remember}")
     if remember:
         memory.append(f"Q: {question} -> {remember}")
+        save_memory(memory)
     return answer
-
 print("\n Self-Learning AI Agent")
 print("Type 'quit' to exit | Type 'memory' to see what I remember\n")
-
 while True:
     question = input("You: ").strip()
     if question.lower() == "quit":
@@ -77,9 +84,9 @@ while True:
     elif question.lower() == "memory":
         if memory:
             print("\n Current Memory:")
-            for i, m in enumerate(memory,1):
+            for i, m in enumerate(memory, 1):
                 print(f"{i}. {m}")
-                print()
+            print()
         else:
             print("No memory yet.\n")
     elif question:
