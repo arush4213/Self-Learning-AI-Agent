@@ -2,6 +2,7 @@ import os
 import json
 from dotenv import load_dotenv
 from google import genai
+from ddgs import DDGS
 
 load_dotenv()
 client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
@@ -14,18 +15,35 @@ def load_memory():
 def save_memory(memory):
     with open(MEMORY_FILE, "w") as f:
         json.dump(memory, f, indent=2)
+def search_web(query):
+    with DDGS() as ddgs:
+        results = ddgs.text(query, max_results=3)
+        if results:
+            output = ""
+            for r in results:
+                output += f"- {r['title']}: {r['body']}\n"
+            return output
+        return "No results found."
 
 memory = load_memory()
 def think(question, memory):
     memory_context = "\n".join(memory) if memory else "No previous memory."
+    search_results = search_web(question)
     prompt = f"""You are a self-learning AI agent.
+
 Your memory from previous interactions:
 {memory_context}
+
+Real-time web search results for this question:
+{search_results}
+
 Current question: {question}
+
 Think step by step:
 1. What do I already know about this from memory?
-2. What is the answer to this question?
-3. What should I remember for future questions?
+2. What do the web search results tell me?
+3. What is the best answer combining memory and search results?
+4. What should I remember for future questions?
 
 Format your response as:
 THOUGHT: your thinking process
