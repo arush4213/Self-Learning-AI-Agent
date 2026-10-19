@@ -6,11 +6,11 @@ The project explores how an AI agent can retrieve information, use previous inte
 
 ## Features
 
--**AI-Powered Responses:** Uses Google's Gemini API to generate answers to user queries.
--**Web Search:** Retrieves relevant web results using DuckDuckGo Search.
--**Persistent Memory:** Stores short memory notes in local JSON file.
--**Context-Aware Conversations:** Uses saved memories to provide more relevant responses.
--**Terminal Interface:** Interact with the agent directly through the command line.
+- **AI-Powered Responses:** Uses Google's Gemini API to generate answers to user queries.
+- **Web Search:** Retrieves relevant web results using DuckDuckGo Search.
+- **Persistent Memory:** Stores short memory notes in local JSON file.
+- **Context-Aware Conversations:** Uses saved memories to provide more relevant responses.
+- **Terminal Interface:** Interact with the agent directly through the command line.
 - **Web Interface:** Chat with the agent through a Streamlit application.
 - **Memory Management:** View saved memories in the terminal and clear memory through the web interface.
 
